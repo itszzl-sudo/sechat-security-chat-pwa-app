@@ -1,6 +1,8 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useStore } from '../store/useStore'
 import RoleBadge from '../components/RoleBadge'
+import MergeAccounts from '../components/MergeAccounts'
 
 export default function SettingsPage() {
   const navigate = useNavigate()
@@ -17,6 +19,11 @@ export default function SettingsPage() {
   const setBiometricEnabled = useStore(s => s.setBiometricEnabled)
   const setAuthenticated = useStore(s => s.setAuthenticated)
   const setCurrentUser = useStore(s => s.setCurrentUser)
+  const autoApproveSettings = useStore(s => s.autoApproveSettings)
+  const setAutoApprove = useStore(s => s.setAutoApprove)
+  const getAccountUsernames = useStore(s => s.getAccountUsernames)
+
+  const [showMerge, setShowMerge] = useState(false)
 
   const handleLogout = () => {
     setAuthenticated(false)
@@ -70,6 +77,8 @@ export default function SettingsPage() {
 
   const timerOptions = [5, 10, 15, 30, 60, 300, 3600]
 
+  const linkedAccounts = getAccountUsernames()
+
   return (
     <div className="page">
       <header className="header">
@@ -93,6 +102,17 @@ export default function SettingsPage() {
               {currentUser?.sponsorRole && currentUser.sponsorRole !== 'none' && (
                 <div style={{ marginTop: 8 }}>
                   <RoleBadge role={currentUser.sponsorRole as any} size="medium" showLabel={true} />
+                </div>
+              )}
+              {/* Linked / merged accounts */}
+              {linkedAccounts.length > 1 && (
+                <div style={{ marginTop: 6, fontSize: 11, color: 'var(--text-secondary)' }}>
+                  <span style={{ color: 'var(--accent)' }}>Merged accounts:</span>{' '}
+                  {linkedAccounts.map((u, i) => (
+                    <span key={i}>
+                      {i > 0 && ', '}@{u}
+                    </span>
+                  ))}
                 </div>
               )}
             </div>
@@ -201,6 +221,42 @@ export default function SettingsPage() {
               <div className="toggle-knob" />
             </div>
           </div>
+
+          {/* Auto-Approve Friend Requests */}
+          <div className="settings-item" style={{ borderTop: '1px solid var(--border)', paddingTop: 12, marginTop: 4 }}>
+            <div className="settings-item-left">
+              <div className="settings-item-icon">{'\uD83D\uDCAC'}</div>
+              <div>
+                <div className="settings-item-label">Auto-Approve Friend Requests</div>
+                <div className="settings-item-desc">Automatically accept incoming requests</div>
+              </div>
+            </div>
+            <div
+              className={'toggle' + (autoApproveSettings.enabled ? ' active' : '')}
+              onClick={() => setAutoApprove(!autoApproveSettings.enabled, autoApproveSettings.requiredCredential)}
+            >
+              <div className="toggle-knob" />
+            </div>
+          </div>
+          {autoApproveSettings.enabled && (
+            <div style={{ padding: '8px 0 0', marginBottom: 8 }}>
+              <input
+                type="text"
+                placeholder="Required credential (password) for auto-approve..."
+                value={autoApproveSettings.requiredCredential}
+                onChange={e => setAutoApprove(true, e.target.value)}
+                style={{
+                  width: '100%', padding: '8px 12px', borderRadius: 6,
+                  border: '1px solid var(--border)', background: 'var(--bg-primary)',
+                  color: 'var(--text-primary)', fontSize: 13, outline: 'none',
+                  boxSizing: 'border-box'
+                }}
+              />
+              <div style={{ fontSize: 10, color: 'var(--text-muted)', marginTop: 4 }}>
+                If set, only requests containing this credential will be auto-approved.
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Encryption Section */}
@@ -231,6 +287,37 @@ export default function SettingsPage() {
           }}>
             {'Public Key: ' + (currentUser?.publicKey || 'N/A').substring(0, 48) + '...'}
           </div>
+        </div>
+
+        {/* Merge Accounts Section */}
+        <div className="settings-section">
+          <div className="settings-section-title">{'🔄'} Merge Accounts</div>
+          <div style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 12, lineHeight: 1.6 }}>
+            Link multiple accounts together so you can log in with any of them and share the same chat history.
+          </div>
+          {linkedAccounts.length > 0 && (
+            <div style={{
+              padding: '8px 12px', background: 'rgba(45, 156, 219, 0.08)',
+              borderRadius: 8, marginBottom: 12
+            }}>
+              <div style={{ fontSize: 11, color: 'var(--text-secondary)', marginBottom: 4 }}>Linked accounts:</div>
+              {linkedAccounts.map((u, i) => (
+                <div key={i} style={{ fontSize: 13, color: 'var(--accent)', fontFamily: 'monospace' }}>
+                  {'👤'} {u}
+                </div>
+              ))}
+            </div>
+          )}
+          <button
+            onClick={() => setShowMerge(true)}
+            style={{
+              width: '100%', padding: 12, borderRadius: 8, border: 'none',
+              background: 'var(--accent)', color: '#fff', fontWeight: 600,
+              fontSize: 14, cursor: 'pointer'
+            }}
+          >
+            {'🔄'} Manage Merged Accounts
+          </button>
         </div>
 
         {/* Account Section */}
@@ -264,6 +351,9 @@ export default function SettingsPage() {
           </div>
         </div>
       </div>
+
+      {/* Merge Modal */}
+      {showMerge && <MergeAccounts onClose={() => setShowMerge(false)} />}
     </div>
   )
 }
