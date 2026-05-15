@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useStore, type Message, type MediaAttachment } from '../store/useStore'
 import { keyManager } from '../core/crypto/KeyManager'
+import RoleBadge from '../components/RoleBadge'
 
 export default function ChatPage() {
   const { id } = useParams<{ id: string }>()
@@ -21,8 +22,11 @@ export default function ChatPage() {
   const markRead = useStore(s => s.markRead)
   const currentUser = useStore(s => s.currentUser)
   const startCall = useStore(s => s.startCall)
+  const groups = useStore(s => s.groups)
 
   const chat = chats.find(c => c.id === id)
+  const group = groups.find(g => g.id === id)
+  const isGroup = !!group
   const chatMessages = id ? messages[id] || [] : []
 
   useEffect(() => { if (id) markRead(id) }, [id, markRead])
@@ -226,13 +230,30 @@ export default function ChatPage() {
           {chat.avatar || chat.name.charAt(0)}
         </div>
         <div style={{ flex: 1 }}>
-          <div style={{ fontSize: 16, fontWeight: 600 }}>{chat.name}</div>
-          <div style={{ fontSize: 11, color: 'var(--success)', display: 'flex', alignItems: 'center', gap: 4 }}>
-            <span>🔐</span> End-to-End Encrypted
-            {chat.isVerified && <span className="badge verified" style={{ fontSize: 9 }}>✓ Verified</span>}
-          </div>
+          {isGroup ? (
+            <>
+              <div style={{ fontSize: 16, fontWeight: 600 }}>{group?.name || chat.name}</div>
+              <div style={{ fontSize: 11, color: 'var(--text-secondary)', marginTop: 2 }}>
+                {group?.members?.length || 0} members
+              </div>
+              <div style={{ fontSize: 11, color: 'var(--success)', display: 'flex', alignItems: 'center', gap: 4, marginTop: 2 }}>
+                <span>🔐</span> End-to-End Encrypted
+                {chat.isVerified && <span className="badge verified" style={{ fontSize: 9 }}>✓ Verified</span>}
+              </div>
+            </>
+          ) : (
+            <>
+              <div style={{ fontSize: 16, fontWeight: 600 }}>{chat.name}</div>
+              <div style={{ fontSize: 11, color: 'var(--success)', display: 'flex', alignItems: 'center', gap: 4 }}>
+                <span>🔐</span> End-to-End Encrypted
+                {chat.isVerified && <span className="badge verified" style={{ fontSize: 9 }}>✓ Verified</span>}
+              </div>
+            </>
+          )}
         </div>
-        {/* Voice Call Button */}
+        {isGroup && (
+          <button className="header-action" onClick={() => navigate('/group/' + id)} title="Group Details">👥</button>
+        )}
         <button className="header-action" onClick={handleStartCall} title="Voice Call">📞</button>
         <button className="header-action" onClick={() => navigate('/settings')} title="Settings">⚙️</button>
       </header>
@@ -257,6 +278,19 @@ export default function ChatPage() {
         {chatMessages.map((msg) => (
           <div key={msg.id} className={'message ' + (msg.senderId === currentUser?.id ? 'sent' : 'received')}>
             {/* Message text content */}
+            {isGroup && msg.senderId !== currentUser?.id && (
+              <div style={{ fontSize: 11, color: 'var(--text-secondary)', marginBottom: 2 }}>
+                {(() => {
+                  const member = group?.members.find(m => m.userId === msg.senderId)
+                  return member ? (
+                    <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                      {member.displayName}
+                      <RoleBadge role={member.sponsorRole} size="small" />
+                    </span>
+                  ) : 'Unknown'
+                })()}
+              </div>
+            )}
             <div>{msg.content}</div>
 
             {/* Media attachments */}

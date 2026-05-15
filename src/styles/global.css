@@ -948,3 +948,158 @@ body {
     padding-right: calc(12px + env(safe-area-inset-right));
   }
 }
+
+
+/* Group Section */
+.group-section {
+  margin-bottom: 4px;
+}
+
+.group-section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.group-create-form {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; max-height: 0; }
+  to { opacity: 1; max-height: 200px; }
+}
+
+.group-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.group-item:hover {
+  background: rgba(255,255,255,0.03);
+}
+.group-item:active {
+  background: rgba(255,255,255,0.05);
+}
+
+.group-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 600;
+  color: #fff;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, var(--accent), #6c5ce7);
+}
+
+.group-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.group-name {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.group-meta {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.invite-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 16px;
+  margin: 8px 16px;
+  border-radius: var(--radius);
+  background: rgba(45, 156, 219, 0.08);
+  border: 1px dashed var(--accent);
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.invite-btn:hover {
+  background: rgba(45, 156, 219, 0.15);
+}
+
+/* Role badges in chat messages */
+.message-sender {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-bottom: 2px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.message-sender-name {
+  font-weight: 500;
+}
+
+/* Sponsor role colors for badges */
+.role-general { color: #95a5a6; }
+.role-senior { color: #f1c40f; }
+.role-core { color: #e67e22; }
+.role-sole-exclusive { color: #9b59b6; }
+.role-reserve-fund { color: #e74c3c; }
+
+/* Member list in group detail */
+.member-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+
+.member-role-edit {
+  display: flex;
+  gap: 4px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.role-btn {
+  padding: 4px 10px;
+  border-radius: 4px;
+  border: none;
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+.role-btn:hover {
+  transform: scale(1.05);
+}
+.role-btn:active {
+  transform: scale(0.95);
+}

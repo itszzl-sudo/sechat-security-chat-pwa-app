@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { useStore } from '../store/useStore'
+import RoleBadge from '../components/RoleBadge'
 
 export default function SettingsPage() {
   const navigate = useNavigate()
@@ -89,6 +90,11 @@ export default function SettingsPage() {
               <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2 }}>
                 {'\uD83D\uDCF1'} {currentUser?.id || 'N/A'}
               </div>
+              {currentUser?.sponsorRole && currentUser.sponsorRole !== 'none' && (
+                <div style={{ marginTop: 8 }}>
+                  <RoleBadge role={currentUser.sponsorRole as any} size="medium" showLabel={true} />
+                </div>
+              )}
             </div>
           </div>
         </div>

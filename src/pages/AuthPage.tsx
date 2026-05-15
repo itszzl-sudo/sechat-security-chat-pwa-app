@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useStore } from '../store/useStore'
 import { keyManager } from '../core/crypto/KeyManager'
+import RoleBadge from '../components/RoleBadge'
 
 export default function AuthPage() {
   const [username, setUsername] = useState('')
@@ -10,6 +11,7 @@ export default function AuthPage() {
   const [error, setError] = useState('')
   const navigate = useNavigate()
   const registerUser = useStore(s => s.registerUser)
+  const currentUser = useStore(s => s.currentUser)
   const isAuthenticated = useStore(s => s.isAuthenticated)
 
   if (isAuthenticated) {
@@ -76,6 +78,12 @@ export default function AuthPage() {
 
       <div style={{ marginTop: 'auto', textAlign: 'center', padding: 16 }}>
         <div style={{ fontSize: 11, color: 'var(--text-muted)', lineHeight: 1.6 }}>
+          {currentUser?.sponsorRole && currentUser?.sponsorRole !== 'none' && (
+            <div style={{ marginBottom: 8 }}>
+              <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>🏅 Sponsor: </span>
+              <RoleBadge role={currentUser.sponsorRole as any} size="medium" showLabel={true} />
+            </div>
+          )}
           <div>🛡️ Anti-screenshot protection • ⚡ WebGPU hardware security</div>
           <div>📱 PWA enabled • Works offline • 📸 Screenshot auto-blur</div>
         </div>

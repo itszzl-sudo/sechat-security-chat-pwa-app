@@ -6,6 +6,7 @@ import AuthPage from "./pages/AuthPage";
 import ChatListPage from "./pages/ChatListPage";
 import ChatPage from "./pages/ChatPage";
 import SettingsPage from "./pages/SettingsPage";
+import GroupDetailPage from "./pages/GroupDetailPage";
 import VoiceCall from "./components/VoiceCall";
 
 export default function App() {
@@ -37,6 +38,10 @@ export default function App() {
             <Route
               path="/chat/:id"
               element={isAuthenticated ? <ChatPage /> : <Navigate to="/auth" />}
+            />
+            <Route
+              path="/group/:id"
+              element={isAuthenticated ? <GroupDetailPage /> : <Navigate to="/auth" />}
             />
             <Route
               path="/settings"
