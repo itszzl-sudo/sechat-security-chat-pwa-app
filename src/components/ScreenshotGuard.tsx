@@ -14,6 +14,7 @@ export function ScreenshotGuard({ children }: Props) {
 
   useEffect(() => {
     if (!screenshotProtection) return
+    if (!isAuthenticated) return
     screenshotDetector.initialize()
     antiRecordingModule.startMonitoring()
 
