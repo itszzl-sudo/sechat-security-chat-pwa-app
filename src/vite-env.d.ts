@@ -40,3 +40,5 @@ interface GPUCommandEncoder { beginComputePass(): GPUComputePassEncoder; finish(
 interface GPUComputePassEncoder { setPipeline(pipeline: GPUComputePipeline): void; setBindGroup(index: number, bindGroup: GPUBindGroup): void; dispatchWorkgroups(x: number, y?: number, z?: number): void; end(): void }
 interface GPUCommandBuffer {}
 interface GPUQueue { submit(commandBuffers: GPUCommandBuffer[]): void; writeBuffer(buffer: GPUBuffer, bufferOffset: number, data: BufferSource, dataOffset?: number, size?: number): void }
+
+declare const __BUILD_TIME__: string;

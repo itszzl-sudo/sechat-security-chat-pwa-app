@@ -214,6 +214,23 @@ export default function AuthPage() {
 
   return (
     <div className="page auth-page">
+      {/* Build time indicator (testing) */}
+      <div style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        padding: "4px 8px",
+        fontSize: 10,
+        color: "var(--text-muted)",
+        background: "rgba(0,0,0,0.3)",
+        borderBottomRightRadius: 6,
+        zIndex: 100,
+        fontFamily: "monospace",
+        lineHeight: 1.4,
+      }}>
+        <div>SeChat</div>
+        <div>{__BUILD_TIME__}</div>
+      </div>
       <div className="auth-logo">{"\u{1F512}"}</div>
       <h1 className="auth-title">SeChat</h1>
       <p className="auth-subtitle">
@@ -221,56 +238,8 @@ export default function AuthPage() {
         identity is protected by WebAuthn or Microsoft Authenticator.
       </p>
 
-      {/* Mode Toggle */}
-      <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
-        <button
-          onClick={() => {
-            setMode("register");
-            setError("");
-            setShowTOTPInput(false);
-            hasAutoStarted.current = false;
-            hasAutoDetected.current = false;
-            cancelRegistration();
-          }}
-          style={{
-            flex: 1,
-            padding: "8px 16px",
-            borderRadius: 8,
-            border: "none",
-            background:
-              mode === "register" ? "var(--accent)" : "var(--bg-tertiary)",
-            color: "#fff",
-            fontWeight: 600,
-            fontSize: 14,
-            cursor: "pointer",
-          }}
-        >
-          Register
-        </button>
-        <button
-          onClick={() => {
-            setMode("login");
-            setError("");
-            setShowTOTPInput(false);
-          }}
-          style={{
-            flex: 1,
-            padding: "8px 16px",
-            borderRadius: 8,
-            border: "none",
-            background:
-              mode === "login" ? "var(--accent)" : "var(--bg-tertiary)",
-            color: "#fff",
-            fontWeight: 600,
-            fontSize: 14,
-            cursor: "pointer",
-          }}
-        >
-          Login
-        </button>
-      </div>
-
-      {true ? (<>
+      
+{true ? (<>
           {/* Registration Flow */}
           <div
             style={{
