@@ -250,19 +250,6 @@ export default function AuthPage() {
               gap: 16,
             }}
           >
-            {/* Random Username Display */}
-            <div
-              style={{
-                padding: "12px 16px",
-                background: "rgba(45, 156, 219, 0.08)",
-                borderRadius: 12,
-                textAlign: "center",
-                border: "1px solid var(--border)",
-              }}
-            >
-
-            </div>
-
             {/* Platform detection indicator */}
             {registrationStep === "generating" && (
               <div
