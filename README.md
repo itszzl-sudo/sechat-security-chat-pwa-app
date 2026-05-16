@@ -51,6 +51,21 @@
 - Roles are visible on user profiles, chat messages, and group member lists
 - Group admins can assign/change roles for members
 
+### ✈️ Sponsor Flying Effects
+When a sponsor is active, their badge flies across chat windows with particle effects. Frequency depends on sponsor level and viewer's own level. Click a flying sponsor to add them as friend.
+
+| Viewer Role | Can See Levels |
+|------------|---------------|
+| None | 1-5 (all) |
+| General (1) | 2-5 |
+| Senior (2) | 3-5 |
+| Core (3) | 4-5 |
+| Sole Exclusive (4) | 5 |
+| Reserve Fund (5) | None |
+
+### 🔄 Multi-Version Support
+Multiple sechat versions run simultaneously sharing data. The bot tracks adoption and auto-deprecates old versions.
+
 ### 🔄 Account Merging
 - **Merge two accounts** to share chat history
 - **Both usernames** can log in after merge

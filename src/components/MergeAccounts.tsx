@@ -13,6 +13,7 @@ export default function MergeAccounts({ onClose }: Props) {
   const generateMergeCode = useStore(s => s.generateMergeCode)
   const mergeAccounts = useStore(s => s.mergeAccounts)
   const getAccountUsernames = useStore(s => s.getAccountUsernames)
+  const dissolveMerge = useStore(s => s.dissolveMerge)
   const currentUser = useStore(s => s.currentUser)
 
   const handleGenerateCode = () => {
@@ -62,8 +63,21 @@ export default function MergeAccounts({ onClose }: Props) {
           }}>
             <div style={{ fontSize: 11, color: 'var(--text-secondary)', marginBottom: 4 }}>Linked accounts:</div>
             {linkedAccounts.map((u, i) => (
-              <div key={i} style={{ fontSize: 13, color: 'var(--accent)', fontFamily: 'monospace' }}>
-                {'👤'} {u}
+              <div key={i} style={{ fontSize: 13, color: 'var(--accent)', fontFamily: 'monospace', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <span>{'👤'} {u}</span>
+                {i > 0 && (
+                  <button onClick={() => {
+                    if (window.confirm('Unilaterally dissolve merge with ' + u + '? Chat history will be preserved.')) {
+                      const ok = dissolveMerge(u)
+                      if (ok) setMessage('✅ Merge dissolved. ' + u + ' is now independent.')
+                      else setMessage('❌ Failed to dissolve merge.')
+                    }
+                  }} style={{
+                    background: 'rgba(233, 69, 96, 0.15)', color: 'var(--danger)',
+                    border: 'none', borderRadius: 4, padding: '2px 8px',
+                    fontSize: 10, cursor: 'pointer', fontWeight: 600
+                  }}>{'✕'} Dissolve</button>
+                )}
               </div>
             ))}
           </div>

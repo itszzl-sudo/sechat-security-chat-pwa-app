@@ -244,6 +244,16 @@ interface AppState {
   userSearchResults: RegisteredUser[];
   mergeCode: string;
 
+  // ── SPONSOR EFFECTS ──
+  sponsorEffectQueue: {
+    userId: string;
+    username: string;
+    displayName: string;
+    role: SponsorRole;
+    avatar: string;
+  }[];
+  lastSponsorEffectTime: number;
+
   // ── EXISTING ACTIONS ──
   setAuthenticated: (val: boolean) => void;
   setCurrentUser: (user: User | null) => void;
@@ -311,6 +321,7 @@ interface AppState {
   generateMergeCode: () => string;
   mergeAccounts: (mergeCode: string) => boolean;
   getAccountUsernames: () => string[];
+  dissolveMerge: (targetUsername: string) => boolean;
 
   // ── NEW HELPERS ──
   getUserByUsername: (username: string) => RegisteredUser | undefined;
@@ -354,6 +365,10 @@ export const useStore = create<AppState>()(
       authMethod: null,
       userSearchResults: [],
       mergeCode: "",
+
+      // ── SPONSOR EFFECTS ──
+      sponsorEffectQueue: [],
+      lastSponsorEffectTime: 0,
 
       // ══════════════════════════════════════════════════════════════════
       // EXISTING ACTIONS
@@ -649,7 +664,11 @@ export const useStore = create<AppState>()(
       // ══════════════════════════════════════════════════════════════════
 
       generateUsername: () => {
-        const username = "User_" + randomSuffix(5);
+        const domain =
+          typeof window !== "undefined"
+            ? window.location.hostname
+            : "localhost";
+        const username = "sechat://" + domain + "/" + randomSuffix(8);
         return username;
       },
 
@@ -1215,6 +1234,49 @@ export const useStore = create<AppState>()(
         }
 
         return merged;
+      },
+
+      dissolveMerge: (targetUsername: string) => {
+        const state = get();
+        const currentUser = state.currentUser;
+        if (!currentUser) return false;
+
+        // Case 1: Current user is primary, dissolving a merged account
+        const target = state.registeredUsers.find(
+          (u) =>
+            u.username === targetUsername &&
+            u.mergedInto === currentUser.username,
+        );
+        if (target) {
+          set((s) => ({
+            registeredUsers: s.registeredUsers.map((u) =>
+              u.username === targetUsername
+                ? { ...u, mergedInto: undefined }
+                : u,
+            ),
+          }));
+          return true;
+        }
+
+        // Case 2: Current user is a merged account, dissolving itself
+        const currentRegistered = state.registeredUsers.find(
+          (u) => u.id === currentUser.id,
+        );
+        if (
+          currentRegistered?.mergedInto &&
+          currentRegistered.username === targetUsername
+        ) {
+          set((s) => ({
+            registeredUsers: s.registeredUsers.map((u) =>
+              u.username === targetUsername
+                ? { ...u, mergedInto: undefined }
+                : u,
+            ),
+          }));
+          return true;
+        }
+
+        return false;
       },
 
       // ══════════════════════════════════════════════════════════════════

@@ -1,4 +1,5 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { useEffect } from "react";
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import { useStore } from "./store/useStore";
 import { ScreenshotGuard } from "./components/ScreenshotGuard";
 import { WebGPUGuard } from "./components/WebGPUGuard";
@@ -8,13 +9,30 @@ import ChatPage from "./pages/ChatPage";
 import SettingsPage from "./pages/SettingsPage";
 import GroupDetailPage from "./pages/GroupDetailPage";
 import VoiceCall from "./components/VoiceCall";
+import SponsorEffect from "./components/SponsorEffect";
 
 export default function App() {
   const isAuthenticated = useStore((s) => s.isAuthenticated);
+  const navigate = useNavigate();
+
+  // Listen for sponsor-click events from SponsorEffect flyers
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent).detail;
+      if (detail?.displayName) {
+        // Navigate to chat list where user can search/add the sponsor
+        navigate("/chats");
+        console.log("[Sponsor] Clicked:", detail.displayName);
+      }
+    };
+    window.addEventListener("sponsor-click", handler);
+    return () => window.removeEventListener("sponsor-click", handler);
+  }, [navigate]);
 
   return (
     <ScreenshotGuard>
       <WebGPUGuard>
+        <SponsorEffect />
         <VoiceCall />
         <div className="app-container">
           <Routes>
@@ -41,7 +59,9 @@ export default function App() {
             />
             <Route
               path="/group/:id"
-              element={isAuthenticated ? <GroupDetailPage /> : <Navigate to="/auth" />}
+              element={
+                isAuthenticated ? <GroupDetailPage /> : <Navigate to="/auth" />
+              }
             />
             <Route
               path="/settings"

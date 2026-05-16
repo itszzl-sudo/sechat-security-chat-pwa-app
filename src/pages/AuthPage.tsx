@@ -369,7 +369,7 @@ export default function AuthPage() {
       <div style={{ marginTop: 'auto', textAlign: 'center', padding: 16 }}>
         <div style={{ fontSize: 11, color: 'var(--text-muted)', lineHeight: 1.6 }}>
           <div>{'\u{1F6E1}\uFE0F'} Passwordless {'\u{1F510}'} WebAuthn + TOTP</div>
-          <div>{'\u{1F464}'} Random usernames {'\u{1F512}'} 5-min registration lock</div>
+          <div>{'\u{1F464}'} sechat://domain/XXXXXXXX {'\u{1F512}'} 5-min registration lock</div>
           <div>{'\u{1F4F1}'} Microsoft Authenticator compatible</div>
         </div>
       </div>
