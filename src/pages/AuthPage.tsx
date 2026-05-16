@@ -260,20 +260,7 @@ export default function AuthPage() {
                 border: "1px solid var(--border)",
               }}
             >
-              {registrationTimer > 0 && (
-                <div
-                  style={{
-                    fontSize: 11,
-                    color:
-                      registrationTimer < 60
-                        ? "var(--danger)"
-                        : "var(--text-muted)",
-                    marginTop: 4,
-                  }}
-                >
-                  {"\u23F1\uFE0F"} Locked for {formatTimer(registrationTimer)}
-                </div>
-              )}
+
             </div>
 
             {/* Platform detection indicator */}
@@ -355,11 +342,11 @@ export default function AuthPage() {
                   className="btn-primary"
                   onClick={handleVerifyTOTP}
                   disabled={isLoading || totpCode.length < 6}
-                  style={{ marginTop: 8, opacity: isLoading ? 0.7 : 1 }}
+                  style={{ marginTop: 8, opacity: isLoading ? 0.7 : 1, textAlign: "center" }}
                 >
                   {isLoading
                     ? "\u23F3 Verifying..."
-                    : "\u2705 Verify & Complete Registration"}
+                    : "\u2705 Confirm"}
                 </button>
               </div>
             )}
