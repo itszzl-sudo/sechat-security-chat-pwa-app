@@ -19,7 +19,7 @@
 - **WebGPU Compute Shaders** apply dynamic noise patterns invisible to the human eye but disruptive to cameras and screen recording
 - **Moiré pattern generation** interferes with photographing the screen
 - **Temporal noise** changes every frame, making video recording unusable
-- **Watermark overlay** — PRIVCHAT PROTECTED subtly rendered on screen
+- **Watermark overlay** — SeChat PROTECTED subtly rendered on screen
 - **Ambient light monitoring** detects camera flash/AF assist light
 - **Device orientation analysis** detects when device is laid flat (external camera photography)
 - **Performance monitoring** detects screen recording overhead via frame drop analysis
@@ -156,11 +156,11 @@ MIT
 
 <br>
 
-# PrivChat — 安全通讯工具
+# SeChat — 安全通讯工具
 
 > *无密码. 私密. 受保护.*
 
-**PrivChat** 是一款专为 iPhone 用户设计的端到端加密安全通讯应用。它将 **Signal 协议**加密与 **WebGPU** 硬件加速的防截图和防录像保护相结合，构建真正安全的通讯平台。
+**SeChat** 是一款专为 iPhone 用户设计的端到端加密安全通讯应用。它将 **Signal 协议**加密与 **WebGPU** 硬件加速的防截图和防录像保护相结合，构建真正安全的通讯平台。
 
 ---
 
@@ -177,7 +177,7 @@ MIT
 - **WebGPU 计算着色器** 施加人眼不可见但干扰摄像头和录屏的动态噪声
 - **摩尔纹生成** 干扰屏幕翻拍
 - **时间噪声** 每帧变化，使视频录制无法使用
-- **水印覆盖** PRIVCHAT PROTECTED 微妙渲染
+- **水印覆盖** SeChat PROTECTED 微妙渲染
 - **环境光监测** 检测相机闪光灯/对焦辅助灯
 - **设备朝向分析** 检测设备平放（外部相机拍摄）
 - **性能监控** 通过帧率下降分析检测屏幕录制
