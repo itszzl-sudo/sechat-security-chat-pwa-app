@@ -1,6 +1,6 @@
 {
-  "name": "PrivChat - Secure Messenger",
-  "short_name": "PrivChat",
+  "name": "SeChat - Secure Messenger",
+  "short_name": "SeChat",
   "description": "End-to-end encrypted secure messaging with anti-screenshot protection",
   "start_url": "/",
   "display": "standalone",

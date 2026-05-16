@@ -170,7 +170,7 @@ export default function ChatPage() {
       const replies = [
         'Got it! 👋', 'Thanks for the secure message! 🔐',
         'This is end-to-end encrypted. 👍', 'Message received safely. ✅',
-        'PrivChat keeps us safe! 🛡️', 'Your privacy matters! 🤫',
+        'SeChat keeps us safe! 🛡️', 'Your privacy matters! 🤫',
         'Secure attachment received! 🔒',
         'Can you see the anti-screenshot working? 🔒',
         'Your files are encrypted end-to-end! 📁🔐'
@@ -694,7 +694,7 @@ export default function ChatPage() {
             fontSize: 11,
             color: 'rgba(255,255,255,0.5)'
           }}>
-            🔐 End-to-End Encrypted • Protected by PrivChat
+            🔐 End-to-End Encrypted • Protected by SeChat
           </div>
         </div>
       )}

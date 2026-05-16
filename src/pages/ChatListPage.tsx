@@ -94,8 +94,8 @@ export default function ChatListPage() {
   return (
     <div className="page">
       <header className="header">
-        <img src="/sechat.png" alt="PrivChat" style={{ width: 28, height: 28, borderRadius: 8 }} />
-        <span style={{ fontSize: 20, fontWeight: 700 }}>PrivChat</span>
+        <img src="/sechat.png" alt="SeChat" style={{ width: 28, height: 28, borderRadius: 8 }} />
+        <span style={{ fontSize: 20, fontWeight: 700 }}>SeChat</span>
         <div style={{ flex: 1 }} />
         <button
           className="header-action"

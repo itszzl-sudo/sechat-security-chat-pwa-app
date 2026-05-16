@@ -12,7 +12,7 @@ export interface WebAuthnCredential {
 export class WebAuthnAuth {
   private static instance: WebAuthnAuth
   private credentials: Map<string, WebAuthnCredential> = new Map()
-  private storageKey = 'privchat-webauthn-credentials'
+  private storageKey = 'sechat-webauthn-credentials'
 
   private constructor() {
     this.loadCredentials()
@@ -50,7 +50,7 @@ export class WebAuthnAuth {
 
       const publicKey: PublicKeyCredentialCreationOptions = {
         challenge,
-        rp: { name: 'PrivChat', id: window.location.hostname },
+        rp: { name: 'SeChat', id: window.location.hostname },
         user: {
           id: userId,
           name: username,

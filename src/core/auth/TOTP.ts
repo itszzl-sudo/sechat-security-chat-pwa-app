@@ -4,7 +4,7 @@
 export class TOTP {
   private static instance: TOTP
   private secrets: Map<string, string> = new Map()
-  private storageKey = 'privchat-totp-secrets'
+  private storageKey = 'sechat-totp-secrets'
 
   private constructor() {
     this.loadSecrets()
@@ -124,7 +124,7 @@ export class TOTP {
   }
 
   getQRCodeUrl(username: string, secret: string): string {
-    const issuer = encodeURIComponent('PrivChat')
+    const issuer = encodeURIComponent('SeChat')
     const user = encodeURIComponent(username)
     return `otpauth://totp/${issuer}:${user}?secret=${secret}&issuer=${issuer}&algorithm=SHA1&digits=6&period=30`
   }

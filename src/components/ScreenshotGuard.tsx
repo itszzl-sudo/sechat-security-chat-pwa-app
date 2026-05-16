@@ -80,7 +80,7 @@ export function ScreenshotGuard({ children }: Props) {
             <div style={{ fontSize: 48, marginBottom: 12 }}>🚫</div>
             <h2 style={{ margin: '0 0 8px', color: '#e94560' }}>📸 Screenshot Detected!</h2>
             <p style={{ margin: 0, color: '#8899aa', fontSize: 14 }}>
-              Content automatically blurred by PrivChat security
+              Content automatically blurred by SeChat security
             </p>
             <div style={{ marginTop: 12, fontSize: 11, color: '#5a6a7a' }}>
               Anti-screenshot protection active

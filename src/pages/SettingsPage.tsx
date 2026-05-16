@@ -49,7 +49,7 @@ export default function SettingsPage() {
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = 'privchat-keys.json'
+    a.download = 'sechat-keys.json'
     a.click()
     URL.revokeObjectURL(url)
   }
@@ -341,7 +341,7 @@ export default function SettingsPage() {
         <div className="settings-section">
           <div className="settings-section-title">About</div>
           <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.8 }}>
-            <div>{'\uD83D\uDCF1'} PrivChat v1.0.0</div>
+            <div>{'\uD83D\uDCF1'} SeChat v1.0.0</div>
             <div>{'\uD83D\uDD10'} Signal Protocol E2EE</div>
             <div>{'\uD83D\uDCF8'} Anti-screenshot protection</div>
             <div>{'\u26A1'} WebGPU hardware security</div>

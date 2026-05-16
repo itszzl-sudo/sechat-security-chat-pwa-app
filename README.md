@@ -2,6 +2,22 @@
 
 > *Passwordless. Private. Protected.*
 
+
+
+## 📚 Documentation
+
+| Document | Description |
+|----------|-------------|
+| [Architecture](ARCHITECTURE.md) | Full system architecture and module design |
+| [API Protocol](API.md) | Bot ↔ Server communication protocol |
+| [Bootstrap Guide](BOOTSTRAP.md) | Initial setup guide (15 min) |
+| [Code Lock](CODE-LOCK.md) | Version freezing and signed updates |
+| [Governance Voting](GOVERNANCE-VOTING.md) | Sponsor-weighted upgrade voting |
+| [Wallet Security](WALLET-SECURITY.md) | Hot/cold wallet protection |
+| [AI Code Convention](CONVENTION.md) | AI audit rules and scoring |
+| [Adaptive Security](ADAPTIVE-SECURITY.md) | User-count based security levels |
+| [SeChatbot Branch](https://github.com/itszzl-sudo/sechat-security-chat-pwa-app/tree/sechatbot) | Autonomous operator bot source |
+
 **SeChat** is a privacy-first, end-to-end encrypted secure messaging application designed exclusively for iPhone users. It combines **Signal Protocol** encryption with **WebGPU** hardware-accelerated anti-screenshot and anti-recording protection, creating a truly secure communication platform.
 
 ---

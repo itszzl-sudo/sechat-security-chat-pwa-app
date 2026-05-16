@@ -171,7 +171,7 @@ export default function AuthPage() {
   return (
     <div className="page auth-page">
       <div className="auth-logo">{'\u{1F512}'}</div>
-      <h1 className="auth-title">PrivChat</h1>
+      <h1 className="auth-title">SeChat</h1>
       <p className="auth-subtitle">
         Passwordless secure messaging with biometric authentication.
         Your identity is protected by WebAuthn or Microsoft Authenticator.

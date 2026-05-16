@@ -1,9 +1,9 @@
 {
-  "name": "privchat",
+  "name": "sechat",
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "PrivChat - Secure messaging with Signal Protocol & WebGPU anti-screenshot protection",
+  "description": "SeChat - Secure messaging with Signal Protocol & WebGPU anti-screenshot protection",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",

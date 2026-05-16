@@ -7,7 +7,7 @@ export class WebGPUAntiCapture {
   private photoProtection = true
   private recordingProtection = true
   private detectionThreshold = 0.85
-  private watermarkText = 'PRIVCHAT PROTECTED'
+  private watermarkText = 'SECHAT PROTECTED'
   private animFrameId: number = 0
   private frameCount = 0
   private startTime = 0
@@ -79,7 +79,7 @@ export class WebGPUAntiCapture {
           fn renderWatermark(pos: vec2<f32>, time: f32) -> f32 {
             let cx = pos.x - 0.5;
             let cy = pos.y - 0.5;
-            // Create a cross-hatch pattern that forms "PRIVCHAT PROTECTED"
+            // Create a cross-hatch pattern that forms "SECHAT PROTECTED"
             let bar1 = abs(cx * 0.8 + cy * 0.2);
             let bar2 = abs(cx * 0.2 - cy * 0.8);
             let hatch = min(bar1, bar2);

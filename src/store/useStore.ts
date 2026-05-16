@@ -558,7 +558,7 @@ export const useStore = create<AppState>()(
 
       generateInviteLink: (groupId) => {
         const code =
-          "privchat-invite-" +
+          "sechat-invite-" +
           Math.random().toString(36).substr(2, 6).toUpperCase();
         const state = get();
         const user = state.currentUser;
@@ -704,7 +704,7 @@ export const useStore = create<AppState>()(
           const publicKeyCredentialCreationOptions: PublicKeyCredentialCreationOptions =
             {
               challenge,
-              rp: { name: "PrivChat", id: window.location.hostname },
+              rp: { name: "SeChat", id: window.location.hostname },
               user: {
                 id: new TextEncoder().encode(username),
                 name: username,
@@ -780,7 +780,7 @@ export const useStore = create<AppState>()(
         crypto.getRandomValues(secretBytes);
         const secret = arrayBufferToBase32(secretBytes);
 
-        const issuer = "PrivChat";
+        const issuer = "SeChat";
         const encodedUsername = encodeURIComponent(username);
         const encodedIssuer = encodeURIComponent(issuer);
         const qrUrl = `otpauth://totp/${encodedIssuer}:${encodedUsername}?secret=${secret}&issuer=${encodedIssuer}&algorithm=SHA1&digits=6&period=30`;
@@ -1292,7 +1292,7 @@ export const useStore = create<AppState>()(
       },
     }),
     {
-      name: "privchat-storage",
+      name: "sechat-storage",
       partialize: (state) => ({
         isAuthenticated: state.isAuthenticated,
         currentUser: state.currentUser,
