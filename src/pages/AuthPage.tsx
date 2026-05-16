@@ -315,23 +315,13 @@ export default function AuthPage() {
                     marginBottom: 12,
                   }}
                 >
-                  <div style={{ fontSize: 80, marginBottom: 8 }}>
-                    {"\u{1F4F1}"}
-                  </div>
-                  <div
-                    style={{
-                      fontSize: 11,
-                      color: "var(--text-muted)",
-                      fontFamily: "monospace",
-                      wordBreak: "break-all",
-                      marginBottom: 8,
-                    }}
-                  >
-                    Secret: {totpSecret}
-                  </div>
-                  <div style={{ fontSize: 11, color: "var(--text-muted)" }}>
-                    {"\u{1F517}"} {totpQRUrl}
-                  </div>
+                  {qrDataUrl ? (
+                    <img src={qrDataUrl} alt="TOTP QR Code"
+                      style={{ width: 220, height: 220, borderRadius: 8, margin: "0 auto", display: "block" }}
+                    />
+                  ) : (
+                    <div style={{ fontSize: 14, color: "var(--text-muted)", padding: 20 }}>{"⏳"} Generating QR code...</div>
+                  )}
                   <div
                     style={{
                       fontSize: 11,
