@@ -1,8 +1,8 @@
-# PrivChat — Secure Messenger
+# SeChat — Secure Messenger
 
 > *Passwordless. Private. Protected.*
 
-**PrivChat** is a privacy-first, end-to-end encrypted secure messaging application designed exclusively for iPhone users. It combines **Signal Protocol** encryption with **WebGPU** hardware-accelerated anti-screenshot and anti-recording protection, creating a truly secure communication platform.
+**SeChat** is a privacy-first, end-to-end encrypted secure messaging application designed exclusively for iPhone users. It combines **Signal Protocol** encryption with **WebGPU** hardware-accelerated anti-screenshot and anti-recording protection, creating a truly secure communication platform.
 
 ---
 
