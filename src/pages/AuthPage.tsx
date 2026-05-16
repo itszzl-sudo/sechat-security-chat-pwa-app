@@ -260,12 +260,6 @@ export default function AuthPage() {
                 border: "1px solid var(--border)",
               }}
             >
-              <div style={{ fontSize: 13, color: "var(--text-secondary)", marginBottom: 4 }}>
-                {"👤"} Your ID
-              </div>
-              <div style={{ fontSize: 13, fontWeight: 500, color: "var(--text-muted)", fontFamily: "monospace" }}>
-                {currentUsername ? currentUsername.substring(currentUsername.lastIndexOf("/") + 1) : "..."}
-              </div>
               {registrationTimer > 0 && (
                 <div
                   style={{
@@ -322,6 +316,9 @@ export default function AuthPage() {
                   ) : (
                     <div style={{ fontSize: 14, color: "var(--text-muted)", padding: 20 }}>{"⏳"} Generating QR code...</div>
                   )}
+                  <div style={{fontSize:10,color:"var(--text-muted)",textAlign:"center",marginTop:4}}>
+                    {"⏱"} QR code expires in {formatTimer(registrationTimer)}
+                  </div>
                   <div
                     style={{
                       fontSize: 11,
