@@ -1,4 +1,5 @@
 export class AntiRecordingModule {
+  private startupTime = 0
   private static instance: AntiRecordingModule
   private callbacks: Map<string, Array<() => void>> = new Map()
   private isMonitoring = false
@@ -22,6 +23,7 @@ export class AntiRecordingModule {
 
   startMonitoring(): void {
     if (this.isMonitoring) return
+    this.startupTime = Date.now()
     this.isMonitoring = true
 
     // 1. Monitor ambient light for sudden changes (camera flash/preparation)
