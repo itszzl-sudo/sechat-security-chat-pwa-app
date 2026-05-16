@@ -229,7 +229,7 @@ export default function AuthPage() {
         lineHeight: 1.4,
       }}>
         <div>SeChat</div>
-        <div>{__BUILD_TIME__}</div>
+        <div>{"2025-01-15"}</div>
       </div>
       <div className="auth-logo">{"\u{1F512}"}</div>
       <h1 className="auth-title">SeChat</h1>
