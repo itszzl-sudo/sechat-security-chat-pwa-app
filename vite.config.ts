@@ -19,6 +19,7 @@ export default defineConfig({
             try {
               const data = JSON.parse(body);
               // Dynamically import and call the handler
+              delete require.cache[require.resolve("./src/api/sponsor")];
               const { handleSponsorUpdate } = require("./src/api/sponsor");
               const result = handleSponsorUpdate(data);
               res.setHeader("Content-Type", "application/json");
