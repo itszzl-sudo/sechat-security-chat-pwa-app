@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useStore } from "../store/useStore";
 import { keyManager } from "../core/crypto/KeyManager";
 import { totp } from "../core/auth/TOTP";
+import QRCode from "qrcode";
 import RoleBadge from "../components/RoleBadge";
 
 /** Returns true if the current device is a mobile platform that supports WebAuthn. */
@@ -40,6 +41,7 @@ export default function AuthPage() {
   const [error, setError] = useState("");
   const [mode, setMode] = useState<"register" | "login">("register");
   const [showTOTPInput, setShowTOTPInput] = useState(false);
+  const [qrDataUrl, setQrDataUrl] = useState<string>('');
   const timerRef = useRef<number>(0);
   const hasAutoStarted = useRef(false);
   const hasAutoDetected = useRef(false);
@@ -62,6 +64,15 @@ export default function AuthPage() {
       clearInterval(timerRef.current);
     };
   }, [registrationStep, tickRegistrationTimer]);
+
+  // Generate QR code when TOTP URL is available
+  useEffect(() => {
+    if (totpQRUrl) {
+      QRCode.toDataURL(totpQRUrl, { width: 240, margin: 2, color: { dark: '#ffffff', light: '#0d0d1a' } })
+        .then((url: string) => setQrDataUrl(url))
+        .catch(() => {});
+    }
+  }, [totpQRUrl]);
 
   // Auto-start registration on mount
   useEffect(() => {
@@ -259,8 +270,7 @@ export default function AuthPage() {
         </button>
       </div>
 
-      {mode === "register" ? (
-        <>
+      {true ? (<>
           {/* Registration Flow */}
           <div
             style={{
@@ -281,25 +291,11 @@ export default function AuthPage() {
                 border: "1px solid var(--border)",
               }}
             >
-              <div
-                style={{
-                  fontSize: 11,
-                  color: "var(--text-secondary)",
-                  marginBottom: 4,
-                }}
-              >
-                Your random username
+              <div style={{ fontSize: 13, color: "var(--text-secondary)", marginBottom: 4 }}>
+                {"👤"} Your ID
               </div>
-              <div
-                style={{
-                  fontSize: 20,
-                  fontWeight: 700,
-                  fontFamily: "monospace",
-                  color: "var(--accent)",
-                  letterSpacing: 1,
-                }}
-              >
-                {currentUsername || "Generating..."}
+              <div style={{ fontSize: 13, fontWeight: 500, color: "var(--text-muted)", fontFamily: "monospace" }}>
+                {currentUsername ? currentUsername.substring(currentUsername.lastIndexOf("/") + 1) : "..."}
               </div>
               {registrationTimer > 0 && (
                 <div
@@ -508,16 +504,7 @@ export default function AuthPage() {
           </div>
         </>
       ) : (
-        /* Login Mode */
-        <div
-          style={{
-            width: "100%",
-            maxWidth: 320,
-            display: "flex",
-            flexDirection: "column",
-            gap: 16,
-          }}
-        >
+        <div style={{width:"100%",maxWidth:320,display:"flex",flexDirection:"column",gap:16}}>
           <input
             className="input-field"
             type="text"
