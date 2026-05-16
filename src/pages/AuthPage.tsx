@@ -231,7 +231,7 @@ export default function AuthPage() {
         <div>SeChat</div>
         <div>{"2026-05-16 15:58"}</div>
       </div>
-      <div className="auth-logo">{"\u{1F512}"}</div>
+      <div className="auth-logo">{"\u{26D1}"}</div>
       <h1 className="auth-title">SeChat</h1>
       <p className="auth-subtitle">
         Passwordless secure messaging with biometric authentication. Your
@@ -536,10 +536,7 @@ export default function AuthPage() {
           <div>
             {"\u{1F6E1}\uFE0F"} Passwordless {"\u{1F510}"} WebAuthn + TOTP
           </div>
-          <div>
-            {"\u{1F464}"} Anonymous ID {"\u{1F512}"} 5-min
-            registration lock
-          </div>
+          
           <div>{"\u{1F4F1}"} Microsoft Authenticator compatible</div>
         </div>
       </div>
