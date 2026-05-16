@@ -241,6 +241,8 @@ interface AppState {
   registrationTimer: number;
   isWebAuthnAvailable: boolean;
   authMethod: "webauthn" | "totp" | null;
+  registrationComplete: boolean;
+  lastActivityAt: number;
   userSearchResults: RegisteredUser[];
   mergeCode: string;
 
@@ -291,23 +293,19 @@ interface AppState {
   // ── NEW AUTH ACTIONS ──
   generateUsername: () => string;
   startRegistration: () => Promise<string>;
-  attemptWebAuthnRegister: (
-    username: string,
-    displayName: string,
-  ) => Promise<boolean>;
+  attemptWebAuthnRegister: (username: string) => Promise<boolean>;
   attemptWebAuthnLogin: (username: string) => Promise<boolean>;
   setupTOTP: (username: string) => string;
-  verifyTOTPAndRegister: (
-    username: string,
-    displayName: string,
-    code: string,
-  ) => boolean;
-  completeRegistration: (username: string, displayName: string) => void;
+  verifyTOTPAndRegister: (username: string, code: string) => boolean;
+  completeRegistration: (username: string) => void;
   loginUser: (username: string) => Promise<boolean>;
   checkUsernameAvailable: (username: string) => boolean;
   releaseUsername: (username: string) => void;
   tickRegistrationTimer: () => void;
   cancelRegistration: () => void;
+  setDisplayName: (username: string, displayName: string) => void;
+  setLastActivityAt: () => void;
+  cleanupStaleRegistrations: () => void;
 
   // ── NEW FRIEND ACTIONS ──
   searchUsers: (query: string) => RegisteredUser[];
@@ -340,8 +338,8 @@ export const useStore = create<AppState>()(
       messages: {},
       contacts: [],
       securityLevel: "high",
-      screenshotProtection: false,
-      webgpuProtection: false,
+      screenshotProtection: true,
+      webgpuProtection: true,
       selfDestructTimer: 30,
       biometricEnabled: false,
       loginAttempts: 0,
@@ -363,6 +361,8 @@ export const useStore = create<AppState>()(
         typeof window !== "undefined" &&
         typeof window.PublicKeyCredential !== "undefined",
       authMethod: null,
+      registrationComplete: false,
+      lastActivityAt: Date.now(),
       userSearchResults: [],
       mergeCode: "",
 
@@ -690,10 +690,7 @@ export const useStore = create<AppState>()(
         return username;
       },
 
-      attemptWebAuthnRegister: async (
-        username: string,
-        displayName: string,
-      ) => {
+      attemptWebAuthnRegister: async (username: string) => {
         try {
           if (!window.PublicKeyCredential) return false;
 
@@ -708,7 +705,7 @@ export const useStore = create<AppState>()(
               user: {
                 id: new TextEncoder().encode(username),
                 name: username,
-                displayName,
+                displayName: "User",
               },
               pubKeyCredParams: [
                 { alg: -7, type: "public-key" },
@@ -731,6 +728,8 @@ export const useStore = create<AppState>()(
           const credentialId = arrayBufferToBase64Url(credential.rawId);
           localStorage.setItem(`webauthn_credential_${username}`, credentialId);
 
+          // Complete registration with placeholder display name
+          get().completeRegistration(username);
           return true;
         } catch {
           return false;
@@ -795,20 +794,16 @@ export const useStore = create<AppState>()(
         return secret;
       },
 
-      verifyTOTPAndRegister: (
-        username: string,
-        displayName: string,
-        code: string,
-      ) => {
+      verifyTOTPAndRegister: (username: string, code: string) => {
         // In a real app we'd verify the TOTP code against the secret.
         // For this implementation we accept any 6-digit code.
         if (!/^\d{6}$/.test(code)) return false;
 
-        get().completeRegistration(username, displayName);
+        get().completeRegistration(username);
         return true;
       },
 
-      completeRegistration: (username: string, displayName: string) => {
+      completeRegistration: (username: string) => {
         const existing = get().registeredUsers;
         if (existing.some((u) => u.username === username)) return;
 
@@ -824,6 +819,8 @@ export const useStore = create<AppState>()(
         ];
         const randomRole =
           sponsorRoles[Math.floor(Math.random() * sponsorRoles.length)];
+
+        const displayName = "User";
 
         const newUser: User = {
           id,
@@ -848,6 +845,7 @@ export const useStore = create<AppState>()(
         set({
           currentUser: newUser,
           isAuthenticated: true,
+          registrationComplete: true,
           registeredUsers: [...existing, registeredUser],
           registrationStep: "ready",
           authMethod: null,
@@ -855,6 +853,7 @@ export const useStore = create<AppState>()(
           totpQRUrl: "",
           currentUsername: "",
           registrationTimer: 0,
+          lastActivityAt: Date.now(),
         });
 
         // Assign a random sponsor role after a short delay
@@ -899,6 +898,8 @@ export const useStore = create<AppState>()(
         set({
           currentUser: userForStore,
           isAuthenticated: true,
+          registrationComplete: false,
+          lastActivityAt: Date.now(),
         });
 
         return true;
@@ -935,6 +936,61 @@ export const useStore = create<AppState>()(
           registrationTimer: 0,
           authMethod: null,
         });
+      },
+
+      setDisplayName: (username: string, displayName: string) => {
+        const state = get();
+        // Update in registeredUsers
+        const updatedRegistered = state.registeredUsers.map((u) =>
+          u.username === username ? { ...u, displayName } : u,
+        );
+        // Update in currentUser if it matches
+        const currentUser =
+          state.currentUser?.username === username
+            ? { ...state.currentUser, displayName }
+            : state.currentUser;
+        set({
+          registeredUsers: updatedRegistered,
+          currentUser,
+          registrationComplete: false,
+          lastActivityAt: Date.now(),
+        });
+      },
+
+      setLastActivityAt: () => {
+        set({ lastActivityAt: Date.now() });
+      },
+
+      cleanupStaleRegistrations: () => {
+        const state = get();
+        const now = Date.now();
+        const sevenDays = 7 * 24 * 60 * 60 * 1000;
+        const staleUsers = state.registeredUsers.filter(
+          (u) =>
+            u.displayName === "User" &&
+            now - u.createdAt > sevenDays &&
+            // No contacts means no chats initiated
+            !state.contacts.some((c) => c.username === u.username),
+        );
+        if (staleUsers.length > 0) {
+          const staleUsernames = new Set(staleUsers.map((u) => u.username));
+          set({
+            registeredUsers: state.registeredUsers.filter(
+              (u) => !staleUsernames.has(u.username),
+            ),
+          });
+          // If current user is being cleaned up, log them out
+          if (
+            state.currentUser &&
+            staleUsernames.has(state.currentUser.username)
+          ) {
+            set({
+              currentUser: null,
+              isAuthenticated: false,
+              registrationComplete: false,
+            });
+          }
+        }
       },
 
       // ══════════════════════════════════════════════════════════════════
@@ -1307,6 +1363,8 @@ export const useStore = create<AppState>()(
         selfDestructTimer: state.selfDestructTimer,
         biometricEnabled: state.biometricEnabled,
         callState: state.callState,
+        registrationComplete: state.registrationComplete,
+        lastActivityAt: state.lastActivityAt,
       }),
     },
   ),

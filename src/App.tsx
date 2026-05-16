@@ -4,6 +4,7 @@ import { useStore } from "./store/useStore";
 import { ScreenshotGuard } from "./components/ScreenshotGuard";
 import { WebGPUGuard } from "./components/WebGPUGuard";
 import AuthPage from "./pages/AuthPage";
+import SetupPage from "./pages/SetupPage";
 import ChatListPage from "./pages/ChatListPage";
 import ChatPage from "./pages/ChatPage";
 import SettingsPage from "./pages/SettingsPage";
@@ -13,7 +14,23 @@ import SponsorEffect from "./components/SponsorEffect";
 
 export default function App() {
   const isAuthenticated = useStore((s) => s.isAuthenticated);
+  const registrationComplete = useStore((s) => s.registrationComplete);
+  const cleanupStaleRegistrations = useStore(
+    (s) => s.cleanupStaleRegistrations,
+  );
   const navigate = useNavigate();
+
+  // Clean up stale registrations (users with no display name, >7 days old, no chats)
+  useEffect(() => {
+    cleanupStaleRegistrations();
+    const interval = setInterval(
+      () => {
+        cleanupStaleRegistrations();
+      },
+      60 * 60 * 1000,
+    ); // Every hour
+    return () => clearInterval(interval);
+  }, []);
 
   // Listen for sponsor-click events from SponsorEffect flyers
   useEffect(() => {
@@ -47,6 +64,18 @@ export default function App() {
               }
             />
             <Route path="/auth" element={<AuthPage />} />
+            <Route
+              path="/setup"
+              element={
+                isAuthenticated && registrationComplete ? (
+                  <SetupPage />
+                ) : isAuthenticated ? (
+                  <Navigate to="/chats" />
+                ) : (
+                  <Navigate to="/auth" />
+                )
+              }
+            />
             <Route
               path="/chats"
               element={

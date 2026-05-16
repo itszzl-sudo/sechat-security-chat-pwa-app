@@ -7,7 +7,7 @@ interface Props { children: ReactNode }
 
 export function ScreenshotGuard({ children }: Props) {
   const [isBlurred, setIsBlurred] = useState(false)
-  const [showWarning, setShowWarning] = useState(false)
+  const [showWarning, setShowWarning] = useState(false) // unused, kept for compat
   const screenshotProtection = useStore(s => s.screenshotProtection)
   const blurTimeoutRef = useRef<number>()
 
@@ -18,7 +18,7 @@ export function ScreenshotGuard({ children }: Props) {
 
     const handleSecurityEvent = () => {
       setIsBlurred(true)
-      setShowWarning(true)
+      // setShowWarning(true)
       clearTimeout(blurTimeoutRef.current)
       blurTimeoutRef.current = window.setTimeout(() => {
         setIsBlurred(false)
@@ -59,35 +59,12 @@ export function ScreenshotGuard({ children }: Props) {
     <div style={{ position: 'relative', width: '100%', height: '100%' }}>
       <div style={{
         width: '100%', height: '100%',
-        filter: isBlurred ? 'blur(24px) brightness(0.2) saturate(0)' : 'none',
+        filter: isBlurred ? 'blur(8px) brightness(0.6)' : 'none',
         transition: 'filter 0.3s ease-in-out'
       }}>
         {children}
       </div>
       
-      {showWarning && (
-        <div style={{
-          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          zIndex: 9999, pointerEvents: 'none'
-        }}>
-          <div style={{
-            background: '#1a1a2e', border: '2px solid #e94560',
-            borderRadius: 16, padding: '24px 32px',
-            textAlign: 'center', color: '#fff',
-            boxShadow: '0 8px 32px rgba(0,0,0,0.5)'
-          }}>
-            <div style={{ fontSize: 48, marginBottom: 12 }}>🚫</div>
-            <h2 style={{ margin: '0 0 8px', color: '#e94560' }}>📸 Screenshot Detected!</h2>
-            <p style={{ margin: 0, color: '#8899aa', fontSize: 14 }}>
-              Content automatically blurred by SeChat security
-            </p>
-            <div style={{ marginTop: 12, fontSize: 11, color: '#5a6a7a' }}>
-              Anti-screenshot protection active
-            </div>
           </div>
-        </div>
-      )}
-    </div>
   )
 }
