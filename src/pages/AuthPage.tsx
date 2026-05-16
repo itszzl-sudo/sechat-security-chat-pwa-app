@@ -89,17 +89,18 @@ export default function AuthPage() {
         setIsLoading(true);
         setError("");
         try {
-          if (isMobilePlatform() && isWebAuthnAvailable) {
-            // Mobile → WebAuthn
-            await keyManager.generateKeyPair();
-            const success = await attemptWebAuthnRegister(currentUsername);
-            if (success) {
-              navigate("/setup", { replace: true });
-            } else {
-              setError(
-                "WebAuthn registration failed. You can try Microsoft Authenticator (TOTP) instead.",
-              );
+          if (isMobilePlatform()) {
+            // Mobile → try WebAuthn first
+            if (isWebAuthnAvailable) {
+              await keyManager.generateKeyPair();
+              const success = await attemptWebAuthnRegister(currentUsername);
+              if (success) {
+                navigate("/setup", { replace: true });
+                return;
+              }
             }
+            // WebAuthn unavailable or failed → fallback to TOTP
+            setupTOTP(currentUsername);
           } else {
             // Desktop → TOTP (Microsoft Authenticator)
             setupTOTP(currentUsername);
@@ -409,6 +410,28 @@ export default function AuthPage() {
                     : "\u2705 Verify & Complete Registration"}
                 </button>
               </div>
+            )}
+
+                        {/* Fallback: manual TOTP trigger if auto-detect didn't work */}
+            {registrationStep === "generating" && currentUsername && !isLoading && (
+              <button
+                onClick={() => {
+                  hasAutoDetected.current = true;
+                  setupTOTP(currentUsername || "");
+                }}
+                style={{
+                  width: "100%",
+                  padding: 10,
+                  borderRadius: 8,
+                  border: "1px solid var(--border)",
+                  background: "var(--bg-tertiary)",
+                  color: "var(--text-primary)",
+                  fontSize: 13,
+                  cursor: "pointer",
+                }}
+              >
+                {"📱"} Use Microsoft Authenticator
+              </button>
             )}
 
             {/* Mobile WebAuthn loading state */}
