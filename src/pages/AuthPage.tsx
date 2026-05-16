@@ -576,7 +576,7 @@ export default function AuthPage() {
             {"\u{1F6E1}\uFE0F"} Passwordless {"\u{1F510}"} WebAuthn + TOTP
           </div>
           <div>
-            {"\u{1F464}"} sechat://domain/XXXXXXXX {"\u{1F512}"} 5-min
+            {"\u{1F464}"} Anonymous ID {"\u{1F512}"} 5-min
             registration lock
           </div>
           <div>{"\u{1F4F1}"} Microsoft Authenticator compatible</div>
