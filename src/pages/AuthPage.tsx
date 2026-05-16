@@ -74,23 +74,17 @@ export default function AuthPage() {
     }
   }, [totpQRUrl]);
 
-  // Check if user has existing credentials (returning user)
+  // Check credentials and auto-start registration (or show login)
   useEffect(() => {
     const hasWebAuthn = !!localStorage.getItem("sechat-webauthn-credentials");
     const hasTOTP = !!localStorage.getItem("sechat-totp-secrets");
     if (hasWebAuthn || hasTOTP) {
+      // Returning user: show login, do NOT auto-start registration
       setMode("login");
+      return;
     }
-  }, []);
-
-  // Auto-start registration on mount
-  useEffect(() => {
-    if (
-      !isAuthenticated &&
-      registrationStep === "generating" &&
-      !hasAutoStarted.current &&
-      mode === "register"
-    ) {
+    // New user: auto-start registration
+    if (!isAuthenticated && registrationStep === "generating" && !hasAutoStarted.current) {
       hasAutoStarted.current = true;
       startRegistration();
     }
