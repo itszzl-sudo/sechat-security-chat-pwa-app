@@ -9,6 +9,7 @@ export function ScreenshotGuard({ children }: Props) {
   const [isBlurred, setIsBlurred] = useState(false)
   const [showWarning, setShowWarning] = useState(false) // unused, kept for compat
   const screenshotProtection = useStore(s => s.screenshotProtection)
+  const isAuthenticated = useStore(s => s.isAuthenticated)
   const blurTimeoutRef = useRef<number>()
 
   useEffect(() => {
@@ -59,7 +60,7 @@ export function ScreenshotGuard({ children }: Props) {
     <div style={{ position: 'relative', width: '100%', height: '100%' }}>
       <div style={{
         width: '100%', height: '100%',
-        filter: isBlurred ? 'blur(8px) brightness(0.6)' : 'none',
+        filter: isBlurred && isAuthenticated ? 'blur(8px) brightness(0.6)' : 'none',
         transition: 'filter 0.3s ease-in-out'
       }}>
         {children}
