@@ -74,12 +74,22 @@ export default function AuthPage() {
     }
   }, [totpQRUrl]);
 
+  // Check if user has existing credentials (returning user)
+  useEffect(() => {
+    const hasWebAuthn = !!localStorage.getItem("sechat-webauthn-credentials");
+    const hasTOTP = !!localStorage.getItem("sechat-totp-secrets");
+    if (hasWebAuthn || hasTOTP) {
+      setMode("login");
+    }
+  }, []);
+
   // Auto-start registration on mount
   useEffect(() => {
     if (
       !isAuthenticated &&
       registrationStep === "generating" &&
-      !hasAutoStarted.current
+      !hasAutoStarted.current &&
+      mode === "register"
     ) {
       hasAutoStarted.current = true;
       startRegistration();
@@ -359,6 +369,32 @@ export default function AuthPage() {
                 {"📱"} Use Microsoft Authenticator
               </button>
             )}
+            {/* Switch mode */}
+            <div style={{ textAlign: "center", marginTop: 8 }}>
+              <button
+                onClick={() => {
+                  const newMode = mode === "register" ? "login" : "register";
+                  setMode(newMode);
+                  setError("");
+                  if (newMode === "register") {
+                    hasAutoStarted.current = false;
+                    hasAutoDetected.current = false;
+                    cancelRegistration();
+                    startRegistration();
+                  }
+                }}
+                style={{
+                  background: "none",
+                  border: "none",
+                  color: "var(--accent)",
+                  fontSize: 12,
+                  cursor: "pointer",
+                  textDecoration: "underline",
+                }}
+              >
+                {mode === "register" ? "Already have an account? Sign in" : "New user? Create account"}
+              </button>
+            </div>
 
             {/* Mobile WebAuthn loading state */}
             {registrationStep === "webauthn" && isLoading && (
